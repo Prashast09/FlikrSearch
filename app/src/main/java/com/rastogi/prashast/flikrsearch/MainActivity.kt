@@ -7,8 +7,10 @@ import android.os.Bundle
 import android.support.v4.view.MenuItemCompat
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.GridLayoutManager
+import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.SearchView
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import com.rastogi.prashast.flikrsearch.viewmodel.FlikrViewModel
@@ -33,6 +35,28 @@ class MainActivity : AppCompatActivity(), MenuItem.OnActionExpandListener {
         initViewModel()
         initRecyclerView()
         initSubscribeUi()
+        initListeners()
+
+    }
+
+    private fun initListeners() {
+
+        val listener = object : RecyclerView.OnScrollListener() {
+
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                val layoutManager = photosRV!!.layoutManager as LinearLayoutManager
+                val visibleItemCount = layoutManager.childCount
+                val totalItemCount = layoutManager.itemCount
+                val pastVisibleItems = layoutManager.findFirstVisibleItemPosition()
+                if (pastVisibleItems + visibleItemCount >= totalItemCount) {
+                    flikrViewModel.getSearchResult(null)
+                }
+            }
+
+        }
+        photosRV!!.addOnScrollListener(listener)
+
 
     }
 
@@ -59,7 +83,7 @@ class MainActivity : AppCompatActivity(), MenuItem.OnActionExpandListener {
     private fun initRecyclerView() {
         val layoutManager = GridLayoutManager(this, 3)
         photosRV!!.layoutManager = layoutManager
-        rvAdapter = PhotoAdapter(baseContext,flikrViewModel.flikrRepo)
+        rvAdapter = PhotoAdapter(baseContext, flikrViewModel.flikrRepo)
         photosRV!!.adapter = rvAdapter
 
     }
