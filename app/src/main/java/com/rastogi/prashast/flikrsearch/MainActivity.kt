@@ -12,7 +12,7 @@ import android.support.v7.widget.SearchView
 import android.view.Menu
 import android.view.MenuItem
 import com.rastogi.prashast.flikrsearch.viewmodel.FlikrViewModel
-import com.rastogi.prashast.photoloader.adapter.PhotoAdapter
+import com.rastogi.prashast.flikrsearch.adapter.PhotoAdapter
 import io.reactivex.Observable
 import io.reactivex.ObservableEmitter
 import io.reactivex.ObservableOnSubscribe
@@ -30,8 +30,8 @@ class MainActivity : AppCompatActivity(), MenuItem.OnActionExpandListener {
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
         initViews()
-        initRecyclerView()
         initViewModel()
+        initRecyclerView()
         initSubscribeUi()
 
     }
@@ -59,7 +59,7 @@ class MainActivity : AppCompatActivity(), MenuItem.OnActionExpandListener {
     private fun initRecyclerView() {
         val layoutManager = GridLayoutManager(this, 3)
         photosRV!!.layoutManager = layoutManager
-        rvAdapter = PhotoAdapter()
+        rvAdapter = PhotoAdapter(baseContext,flikrViewModel.flikrRepo)
         photosRV!!.adapter = rvAdapter
 
     }

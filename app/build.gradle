@@ -47,4 +47,8 @@ dependencies {
 
     //lifecycle
     implementation "android.arch.lifecycle:extensions:$rootProject.lifecycleVersion"
+
+
+    compile 'com.squareup.picasso:picasso:2.5.2'
+
 }

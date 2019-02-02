@@ -32,4 +32,9 @@ class Photo {
     @SerializedName("isfamily")
     var isfamily: Int? = null
 
+    public fun getUrl() : String{
+        return "http://farm" + farm + ".static.flickr.com/" + server + "/" + id + "_" + secret + ".jpg"
+    }
+
+
 }
