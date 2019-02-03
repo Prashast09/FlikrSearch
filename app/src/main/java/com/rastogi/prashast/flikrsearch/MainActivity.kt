@@ -15,6 +15,7 @@ import android.view.Menu
 import android.view.MenuItem
 import com.rastogi.prashast.flikrsearch.viewmodel.FlikrViewModel
 import com.rastogi.prashast.flikrsearch.adapter.PhotoAdapter
+import com.rastogi.prashast.flikrsearch.model.Photo
 import io.reactivex.Observable
 import io.reactivex.ObservableEmitter
 import io.reactivex.ObservableOnSubscribe
@@ -41,15 +42,17 @@ class MainActivity : AppCompatActivity(), MenuItem.OnActionExpandListener {
 
     private fun initListeners() {
 
+
+
         val listener = object : RecyclerView.OnScrollListener() {
 
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
-                val layoutManager = photosRV!!.layoutManager as LinearLayoutManager
-                val visibleItemCount = layoutManager.childCount
-                val totalItemCount = layoutManager.itemCount
-                val pastVisibleItems = layoutManager.findFirstVisibleItemPosition()
-                if (pastVisibleItems + visibleItemCount >= totalItemCount) {
+                val visibleItemCount = (photosRV!!.layoutManager as LinearLayoutManager).childCount
+                val totalItemCount = (photosRV!!.layoutManager as LinearLayoutManager).itemCount
+                val firstVisibleItemPosition = (photosRV!!.layoutManager as LinearLayoutManager).findFirstVisibleItemPosition()
+
+                if (visibleItemCount + firstVisibleItemPosition >= totalItemCount && firstVisibleItemPosition >= 0) {
                     flikrViewModel.getSearchResult(null)
                 }
             }
@@ -119,12 +122,12 @@ class MainActivity : AppCompatActivity(), MenuItem.OnActionExpandListener {
     private fun getTextQueryListener(subscribe: ObservableEmitter<String>): SearchView.OnQueryTextListener {
         return object : SearchView.OnQueryTextListener {
             override fun onQueryTextChange(newText: String): Boolean {
+                rvAdapter!!.submitList(ArrayList<Photo>())
                 subscribe.onNext(newText)
                 return false
             }
 
             override fun onQueryTextSubmit(query: String): Boolean {
-                subscribe.onNext(query)
                 return false
             }
         }

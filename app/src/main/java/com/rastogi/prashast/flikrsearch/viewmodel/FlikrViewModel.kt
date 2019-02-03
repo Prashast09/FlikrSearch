@@ -16,6 +16,7 @@ class FlikrViewModel : ViewModel() {
     var page: Int = 1
     var flikrRepo = FlikrRepo()
     var query: String = ""
+    var currentCountPerPage = 0
 
 
     fun getSearchResult(query: String?) {
@@ -32,6 +33,8 @@ class FlikrViewModel : ViewModel() {
             .retry(3)
             .subscribe(
                 {
+
+                    currentCountPerPage = it.getPhotos()!!.perpage!!
                     if (photoList.value != null) {
                         photoList.value!!.addAll(it.getPhotos()!!.photo!!)
                         notifyPhotoListItem()

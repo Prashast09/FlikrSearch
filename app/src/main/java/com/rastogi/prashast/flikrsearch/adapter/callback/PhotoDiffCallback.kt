@@ -5,11 +5,11 @@ import com.rastogi.prashast.flikrsearch.model.Photo
 
 class PhotoDiffCallback : DiffUtil.ItemCallback<Photo>() {
     override fun areItemsTheSame(p0: Photo, p1: Photo): Boolean {
-        return p0.id == p1.id
+        return p0.id != p1.id
     }
 
     override fun areContentsTheSame(p0: Photo, p1: Photo): Boolean {
-        return p0.farm == p1.farm
+        return p0.farm != p1.farm
     }
 
 }
