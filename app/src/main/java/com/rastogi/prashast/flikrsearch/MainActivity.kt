@@ -1,6 +1,5 @@
 package com.rastogi.prashast.flikrsearch
 
-import android.annotation.SuppressLint
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
@@ -10,19 +9,17 @@ import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.SearchView
-import android.util.Log
 import android.view.Menu
-import android.view.MenuItem
-import com.rastogi.prashast.flikrsearch.viewmodel.FlikrViewModel
 import com.rastogi.prashast.flikrsearch.adapter.PhotoAdapter
 import com.rastogi.prashast.flikrsearch.model.Photo
+import com.rastogi.prashast.flikrsearch.viewmodel.FlikrViewModel
 import io.reactivex.Observable
 import io.reactivex.ObservableEmitter
 import io.reactivex.ObservableOnSubscribe
 import kotlinx.android.synthetic.main.activity_main.*
 import java.util.concurrent.TimeUnit
 
-class MainActivity : AppCompatActivity(), MenuItem.OnActionExpandListener {
+class MainActivity : AppCompatActivity() {
 
     private var photosRV: RecyclerView? = null
     private var rvAdapter: PhotoAdapter? = null
@@ -42,15 +39,14 @@ class MainActivity : AppCompatActivity(), MenuItem.OnActionExpandListener {
 
     private fun initListeners() {
 
-
-
         val listener = object : RecyclerView.OnScrollListener() {
 
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
                 val visibleItemCount = (photosRV!!.layoutManager as LinearLayoutManager).childCount
                 val totalItemCount = (photosRV!!.layoutManager as LinearLayoutManager).itemCount
-                val firstVisibleItemPosition = (photosRV!!.layoutManager as LinearLayoutManager).findFirstVisibleItemPosition()
+                val firstVisibleItemPosition =
+                    (photosRV!!.layoutManager as LinearLayoutManager).findFirstVisibleItemPosition()
 
                 if (visibleItemCount + firstVisibleItemPosition >= totalItemCount && firstVisibleItemPosition >= 0) {
                     flikrViewModel.getSearchResult(null)
@@ -59,7 +55,6 @@ class MainActivity : AppCompatActivity(), MenuItem.OnActionExpandListener {
 
         }
         photosRV!!.addOnScrollListener(listener)
-
 
     }
 
@@ -77,7 +72,6 @@ class MainActivity : AppCompatActivity(), MenuItem.OnActionExpandListener {
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu_dashboard, menu)
         val searchItem = menu.findItem(R.id.action_search)
-        searchItem.setOnActionExpandListener(this)
         val searchView = MenuItemCompat.getActionView(searchItem) as SearchView
         initSearchView(searchView)
         return true
@@ -88,22 +82,12 @@ class MainActivity : AppCompatActivity(), MenuItem.OnActionExpandListener {
         photosRV!!.layoutManager = layoutManager
         rvAdapter = PhotoAdapter(baseContext, flikrViewModel.flikrRepo)
         photosRV!!.adapter = rvAdapter
-
     }
 
     private fun initViews() {
         photosRV = findViewById(R.id.photos_rv)
     }
 
-    override fun onMenuItemActionExpand(item: MenuItem?): Boolean {
-        return false
-    }
-
-    override fun onMenuItemActionCollapse(item: MenuItem?): Boolean {
-        return false
-    }
-
-    @SuppressLint("CheckResult")
     private fun initSearchView(searchView: SearchView) {
         searchView.queryHint = "Start Typing here"
 
