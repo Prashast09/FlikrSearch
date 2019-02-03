@@ -16,16 +16,10 @@ class FlikrViewModel : ViewModel() {
     var page: Int = 1
     var flikrRepo = FlikrRepo()
     var query: String = ""
-    var currentCountPerPage = 0
 
 
     fun getSearchResult(query: String?) {
-        if (query == null || this.query.equals(query)) {
-            page++
-        } else {
-            page = 1
-            this.query = query
-        }
+        paginateQuery(query)
 
         flikrRepo.getSearchResults(this.query, page)
             .subscribeOn(Schedulers.io())
@@ -33,12 +27,10 @@ class FlikrViewModel : ViewModel() {
             .retry(3)
             .subscribe(
                 {
-
-                    currentCountPerPage = it.getPhotos()!!.perpage!!
                     if (photoList.value != null) {
                         photoList.value!!.addAll(it.getPhotos()!!.photo!!)
                         notifyPhotoListItem()
-                    }else{
+                    } else {
                         photoList.value = it.getPhotos()!!.photo!!
                     }
                 },
@@ -46,6 +38,15 @@ class FlikrViewModel : ViewModel() {
                     Log.e(TAG, "error occurred")
                 }
             )
+    }
+
+     fun paginateQuery(query: String?) {
+        if (query == null || query == this.query) {
+            page++
+        } else {
+            page = 1
+            this.query = query
+        }
     }
 
     private fun notifyPhotoListItem() {

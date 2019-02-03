@@ -49,6 +49,9 @@ dependencies {
     implementation "android.arch.lifecycle:extensions:$rootProject.lifecycleVersion"
 
 
-    compile 'com.squareup.picasso:picasso:2.5.2'
+    def lifecycle_version = "2.0.0"
+    annotationProcessor "androidx.lifecycle:lifecycle-compiler:$lifecycle_version"
+    testImplementation "androidx.arch.core:core-testing:$lifecycle_version"
+
 
 }
